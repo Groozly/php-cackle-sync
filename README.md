@@ -1,19 +1,43 @@
 php-cackle-sync
 ===============
 
-PHP Sync Cackle Comments
-
-The pure PHP  example for getting comments from Cackle to local server.
+PHP Cackle Sync Comments
 
 How it works:
 
-1. Custom cron execute script every 60 seconds when page load
+1. Initialize Cackle.
 
-2. Only new comments for each cron task
+2. If timer > 0, all comments from cackle.me 
+will be saved to your database.
 
-3. Parent comments in local db have the local comment's ID
+3. Cackle template (javascript and container) and comments from 
+local database will be displayed on your page (for better SEO 
+optimization).
 
-4. All comment from cackle will saved to your database
+4. If your have cron, schedule sync manually 
+(and set timer = 0 while creating Cackle instance).
 
-5. Comment's template display all comments at the page for SEO
 
+Example
+-------
+
+Initialize Cackle
+
+    $pdo = new PDO('mysql:host=localhost;dbname=cackle;charset=cp1251', 'user', 'password');
+    $cackle = new Cackle(11111, $pdo, 'accountApiKey', 'siteApiKey', 0, 'cp1251');
+    
+
+If you have no cron, initialize Cackle with timer > 0
+
+    // Sync comments with cackle.me once in 120 seconds
+    $cackle = new Cackle(11111, $pdo, 'accountApiKey', 'siteApiKey', 120, 'cp1251');
+    
+    
+Get Cackle code (JS and container) and comments from local DB
+
+    echo $cackle->showComments('cackletest');
+
+
+Sync local comments with Cackle.me (scheduling it to run in your webserver cron)
+
+    $cackle->syncComments();
